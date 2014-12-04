@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Quick Start Guide Example</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="leaflet/leaflet.css" />
+</head>
+<body>
+	<div id="map" style="width: 600px; height: 400px"></div>
+
+	<script src="leaflet/leaflet.js"></script>
+	<script type="text/javascript" src="maps/geojson/boundary.js"></script>
+	<script type="text/javascript" src="maps/geojson/roads.js"></script>
+	<script type="text/javascript" src="maps/geojson/waterline.js"></script>
+	<script type="text/javascript" src="maps/geojson/waterpolygon.js"></script>
+	<script>
+
+		var map = L.map('map').setView([50.8, 86.8], 7);
+
+		var layer = L.tileLayer.wms('http://localhost:8081/geoserver/TIS/wms', {
+			maxZoom: 18,
+            layers: 'TIS:boundary-polygon,TIS:water-polygon',
+            format: 'image/png'
+		});
+
+        var layer1 = L.tileLayer.wms('http://localhost:8081/geoserver/TIS/wms', {
+            minZoom: 8,
+			maxZoom: 18,
+            transparent:true,
+            layers: 'TIS:water-line',
+            format: 'image/png'
+		});
+
+        var layer2 = L.tileLayer.wms('http://localhost:8081/geoserver/TIS/wms', {
+			maxZoom: 18,
+            transparent:true,
+            layers: 'TIS:roads',
+            format: 'image/png'
+		});   
+        
+        
+        map.addLayer(layer);
+        map.addLayer(layer1);
+        map.addLayer(layer2);     
+
+          
+		var popup = L.popup();
+
+		function onMapClick(e) {
+			popup
+				.setLatLng(e.latlng)
+				.setContent("You clicked the map at " + e.latlng.toString())
+				.openOn(map);
+		}
+
+		map.on('click', onMapClick);
+
+	</script>
+</body>
+</html>
